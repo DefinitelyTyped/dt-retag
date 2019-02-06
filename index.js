@@ -1,23 +1,19 @@
-import { TypeScriptVersion } from "definitelytyped-header-parser";
-import * as yargs from "yargs";
+const yargs = require("yargs");
 
-import { CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient } from "./lib/npm-client";
-import { AllPackages, AnyPackage } from "./lib/packages";
-import { getLatestTypingVersion } from "./lib/versions";
+const {
+    CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient,
+    AllPackages, getLatestTypingVersion, parseDefinitions, getDefinitelyTyped,
+    consoleLogger, logUncaughtErrors, loggerWithErrors,
+    nAtATime, parseNProcesses,
+    updateLatestTag, updateTypeScriptVersionTags } = require("types-publisher");
 
-import { consoleLogger, Logger } from "./util/logging";
-import { logUncaughtErrors, nAtATime } from "./util/util";
-
-if (!module.parent) {
-    // TODO: package-publisher.ts doesn't have a main block so probably should just merge this here
-    //  (although npmTags is run in yet a THIRD case, unrelated to npm or to the azure app. It updates for a release.)
-    //  this is the most overloaded piece of software ever
-    const dry = !!yargs.argv.dry;
-    logUncaughtErrors(tag(dry, yargs.argv.name as string | undefined));
-}
+logUncaughtErrors(tag(!!yargs.argv.dry, /** @type {string=} */(yargs.argv.name)));
 
 /**
  * Refreshes the tags on every package.
+ * This needs to be run whenever a new version of Typescript is released.
+ *
+ * It can also refresh the tags on a single package, which can un-wedge types-publisher in certain cases.
  * This shouldn't normally need to run, since we run `tagSingle` whenever we publish a package.
  * But this should be run if the way we calculate tags changes (e.g. when a new release is allowed to be tagged "latest").
  * @param {boolean} dry
@@ -25,6 +21,13 @@ if (!module.parent) {
  * @return {Promise<void>}
  */
 async function tag(dry, name) {
+    const log = loggerWithErrors()[0];
+    const options = { definitelyTypedPath: "../DefinitelyTyped", progress: true, parseInParallel: true };
+    await parseDefinitions(
+        await getDefinitelyTyped(options, log),
+        { nProcesses: parseNProcesses(), definitelyTypedPath: "../DefinitelyTyped" },
+        log);
+
     const publishClient = await NpmPublishClient.create();
     await CachedNpmInfoClient.with(new UncachedNpmInfoClient(),  async infoClient => {
         if (name) {
