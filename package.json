@@ -2,6 +2,10 @@
   "name": "dt-retag",
   "version": "1.0.0",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
+  "dependencies": {
+    "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
+    "yargs": "^12.0.5"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/sandersn/dt-retag/issues"
   },
-  "homepage": "https://github.com/sandersn/dt-retag#readme"
+  "homepage": "https://github.com/sandersn/dt-retag#readme",
+  "devDependencies": {
+    "@types/yargs": "^12.0.8"
+  }
 }
