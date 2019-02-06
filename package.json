@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "dependencies": {
-    "definitelytyped-header-parser": "github:Microsoft/definitelytyped-header-parser#production",
-    "yargs": "^12.0.5"
+    "yargs": "^12.0.5",
+    "types-publisher": "github:Microsoft/types-publisher#production"
   },
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/sandersn/dt-retag#readme",
   "devDependencies": {
+    "@types/node": "^10.12.21",
     "@types/yargs": "^12.0.8"
   }
 }
