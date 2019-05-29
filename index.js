@@ -1,7 +1,7 @@
 const yargs = require("yargs");
 
 const {
-    CachedNpmInfoClient, NpmPublishClient, UncachedNpmInfoClient,
+    withNpmCache, NpmPublishClient, UncachedNpmInfoClient,
     AllPackages, getLatestTypingVersion, parseDefinitions, getDefinitelyTyped,
     consoleLogger, logUncaughtErrors, loggerWithErrors,
     nAtATime, parseNProcesses,
@@ -29,7 +29,7 @@ async function tag(dry, name) {
         log);
 
     const publishClient = await NpmPublishClient.create();
-    await CachedNpmInfoClient.with(new UncachedNpmInfoClient(),  async infoClient => {
+    await withNpmCache(new UncachedNpmInfoClient(),  async infoClient => {
         if (name) {
             const pkg = await AllPackages.readSingle(name);
             const version = await getLatestTypingVersion(pkg, infoClient);
