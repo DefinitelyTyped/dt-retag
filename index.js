@@ -34,13 +34,13 @@ async function tag(dry, name) {
             const pkg = await AllPackages.readSingle(name);
             const version = await getLatestTypingVersion(pkg, infoClient);
             await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-            await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
+            await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
         } else {
             await nAtATime(10, await AllPackages.readLatestTypings(), async pkg => {
                 // Only update tags for the latest version of the package.
                 const version = await getLatestTypingVersion(pkg, infoClient);
                 await updateTypeScriptVersionTags(pkg, version, publishClient, consoleLogger.info, dry);
-                await updateLatestTag(pkg.fullEscapedNpmName, version, publishClient, consoleLogger.info, dry);
+                await updateLatestTag(pkg.fullNpmName, version, publishClient, consoleLogger.info, dry);
             });
         }
     });
