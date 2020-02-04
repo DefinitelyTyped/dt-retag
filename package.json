@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Refresh tags on all DT-published packages in the @types scope.",
   "dependencies": {
-    "definitelytyped-header-parser": "^3.8.0",
+    "definitelytyped-header-parser": "^3.9.0",
     "types-publisher": "github:Microsoft/types-publisher#production",
     "yargs": "^12.0.5"
   },
